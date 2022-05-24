@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+    <title>فضاء المدارس</title>
+</head>
+<body>
+    <header>
+
+
+
+
+
+        <a class="logo" href="/"><img src="/static/img/logo.svg" width="300" alt="logo"></a>
+            
+        <nav>
+            <ul class="nav__links">
+              {% if current_user.is_authenticated %}
+                {% if current_user.username=='admin' %}
+              
+              <li ><button id="btn_sign" type="button"  ><a href="{{ url_for('logout') }}">خروج</a></button> </li>
+                {% else %}
+                <li ><button id="btn_sign" type="button"  ><a href="{{ url_for('logout') }}">خروج</a></button> </li>
+                {% endif %}
+                
+
+              <!-- Example single danger button -->
+
+            {% else %}
+              <li><button id="btn_sign" type="button"  data-toggle="modal" data-target="#exampleModal">تسجيل</button> </li>
+              <li><button id="btn_sign1" type="button"  data-toggle="modal" data-target="#exampleModal2"> دخول</button></li>
+              {% endif %}
+
+                <li><a href="{{ url_for('index') }}"> الرئيسية</a></li>
+            </ul>
+            
+
+        </nav>
+
+        
+
+        <a class="cta" href="{{ url_for('contact') }}"> تواصل معنا</a>
+        <p class="btn btn-outline-info" style="text-align: center;">مجموعة</p>
+
+    </header>
+
+    <div id="mobile__menu" class="overlay">
+        <a class="close1">&times;</a>
+        <div class="overlay__content">
+            <a href="{{ url_for('index') }}">الرئيسية</a>
+            {% if current_user.is_authenticated %}
+              {% if current_user.username=='admin' %}
+            <a href="{{ url_for('logout') }}"><button id="btn_sign" type="button"  >خروج</button></a>
+            <a href="{{ url_for('blog') }}" ><button id="btn_sign1" type="button"> كتابة مقال</button></a>
+            <a href="{{ url_for('user_dash') }}" ><button id="btn_sign1" type="button">  تغيير معلومات الحساب</button></a>
+            <a href="{{ url_for('user') }}" ><button id="btn_sign1" type="button"> مستخدمي الموقع</button></a>
+            <a href="{{ url_for('blogs') }}" ><button id="btn_sign1" type="button">  مقالات</button></a>
+            <a href="{{ url_for('info') }}" ><button id="btn_sign1" type="button"> فضاء المدارس</button></a>
+            <a href="{{ url_for('contact_msg') }}" ><button id="btn_sign1" type="button"> فضاء التواصل </button></a>
+              {% else %}
+            <a href="{{ url_for('logout') }}"><button id="btn_sign" type="button"  >خروج</button></a>
+            <a href="{{ url_for('blog') }}" ><button id="btn_sign1" type="button"> كتابة مقال</button></a>
+            <a href="{{ url_for('user_dash') }}" ><button id="btn_sign1" type="button">  تغيير معلومات الحساب</button></a>
+            <a href="{{ url_for('info') }}" ><button id="btn_sign1" type="button"> فضاء المدارس</button></a>
+              {% endif %}
+
+
+
+
+
+            
+            
+          {% else %}
+      
+            <a ><button id="btn_sign" type="button"  data-toggle="modal" data-target="#exampleModal">تسجيل</button></a>
+            <a ><button id="btn_sign1" type="button"  data-toggle="modal" data-target="#exampleModal2"> دخول</button></a>
+            {% endif %}
+            <a href="{{ url_for('contact') }}"> تواصل معنا</a>
+        </div>
+    </div> 
+    <div class="col-md-12" style="border-bottom:2px solid rgb(160, 155, 155); "></div>
+    <div class="news">
+      
+      <marquee direction="right" onmouseover="this.stop()" onmouseout="this.start()" ">
+
+        {% for i in range (n) %} 
+
+        <a href="{{ url_for('posts', id=posts[i].id)}}" class="news-words" style="margin-left:25px">
+         <p class="bntime">   {{ posts[i].title}}</p>
+          </a>
+
+
+        {% endfor %}
+
+      </marquee>
+      <span id="btext">  : آخر المقالات</span>
+    </div>
+    
+
+
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content ">
+        <div class="modal-header ">
+          <h5 class="text-center" id="exampleModalLabel ">       تسجيل المعلومات    </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('useradd') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                
+                <input type="text" name="username" class="form-control" id="username" aria-describedby="username" style="direction: rtl;" placeholder="اسم المستخدم" required="1">
+            </div>
+
+            <div class="form-group">
+              <input type="text" class="form-control" name="name" id="name" aria-describedby="name" style="direction: rtl ; margin-top: 3%;" placeholder="الاسم و النسب" required="1">
+          </div>
+
+            <div class="form-group">
+                
+                <input type="password" class="form-control" name="password" id="password" aria-describedby="password" style="direction: rtl; margin-top: 3%;" placeholder="كلمة السر" required="1">
+            </div>
+            <div class="form-group">
+                
+                <input type="number" class="form-control" name="tlf" id="tlf" aria-describedby="TLF" style="direction: rtl; margin-top: 3%;" placeholder="رقم الهاتف " required="1">
+            </div>
+            
+            <div class="form-group">
+
+              <label class="btn btn-primary" style="direction: rtl; margin-top: 3%; margin-left: 43% ;margin-bottom: 2%;">
+              <i class="fa fa-image"></i> صورتك<input type="file"  name="file" style="display: none;" name="image" >
+              </label>
+
+            </div>
+
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+              <button id="myBtn" type="submit" class="btn btn-primary" type="submit">تسجيل</button> 
+        </form>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content ">
+        <div class="modal-header ">
+          <h5 class="text-center" id="exampleModalLabel ">  ادخال المعلومات   </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('login') }}" method="POST">
+            <div class="form-group">
+                
+                <input type="text" name="username_l" class="form-control" id="username_l" aria-describedby="name" style="direction: rtl;" placeholder="اسم المستخدم" required="1">
+            </div>
+
+            <div class="form-group">
+                
+                <input type="password" class="form-control" name="password_l" id="password_l" aria-describedby="password_l" style="direction: rtl; margin-top: 3%;" placeholder="كلمة السر" required="1">
+
+            </div>
+
+            <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+              <button type="submit" class="btn btn-primary" type="submit">دخول</button> 
+        </form>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+   {% for message in messages %}
+   <div id="simpleModal" class="modal" tabindex="-1" role="dialog" style="margin-top: 10%;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" style="direction: rtl;">
+                {{ message }}
+            </div>
+        </div>
+    </div>
+</div>
+          
+
+
+   
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+
+<div class="table-wrapper">
+
+
+<table class="fl-table" style="   margin: auto;
+width: 70% ; margin-top: 3%;">
+    <thead>
+        <tr >
+            <th>الاسم الكامل</th>
+            <th >المؤسسة</th>
+            <th> رقم الهاتف</th>
+          </tr>
+    </thead>
+
+    <tr>
+        <td>AIT OUADIL ABDELLAH </td>
+        <td>E IGUER OUFOLLOUS</td>
+        <td>212761511914</td>
+    </tr>
+    <tr>
+        <td>EL GARNI ABDELMEJID </td>
+        <td>E IGUIDAR ELJADIDA</td>
+        <td>212761512924</td>
+    </tr>
+    <tr>
+        <td>AIT HAMEUR CHAFIAI </td>
+        <td>SS AL AMOUAJ TAMRAGHT</td>
+        <td>212669595564</td>
+    </tr>
+    <tr>
+        <td>OUARAY AMINA </td>
+        <td>SS FATIMA ZAHRA AIT MEJJOT</td>
+        <td>212669595531</td>
+    </tr>
+    <tr>
+        <td>EDDERMOUG MOHAMED </td>
+        <td>SS ASKENS ASKENS</td>
+        <td>212761511670</td>
+    </tr>
+    <tr>
+        <td>ERRAJI KHALID </td>
+        <td>SS MOULAY ZIDANE ID BOUABBA</td>
+        <td>212669595526</td>
+    </tr>
+    <tr>
+        <td>KHABBA IMADE </td>
+        <td>SS SIDI YAAQOUB ZAOUIA</td>
+        <td>212669595517</td>
+    </tr>
+    <tr>
+        <td>EL BOUDRI YOUNESS </td>
+        <td>SS ANSIS ANSIS</td>
+        <td>212669595551</td>
+    </tr>
+    <tr>
+        <td>AZIZI M BAREK </td>
+        <td>LYCEE COLLEGIAL OTHMANE BNO AFFANE</td>
+        <td>212761511727</td>
+    </tr>
+    <tr>
+        <td>AIT SALIM ABDELMAJID </td>
+        <td>E ASSALAM</td>
+        <td>212660123672</td>
+    </tr>
+    <tr>
+        <td>BEN KADDOUR LAHOUCINE </td>
+        <td>E ABDALLAH  AL GUERSIFI</td>
+        <td>212660123043</td>
+    </tr>
+    <tr>
+        <td>AIT OULOKCHANE EL HASSAN </td>
+        <td>E JABER IBN HAYYANE</td>
+        <td>212669595523</td>
+    </tr>
+    <tr>
+        <td>SFART OTMAN </td>
+        <td>E AL MATAR</td>
+        <td>212669595788</td>
+    </tr>
+    <tr>
+        <td>TALAININE TAYEB </td>
+        <td>LC ABDELALI  BEN CHEKROUN</td>
+        <td>212661343917</td>
+    </tr>
+    <tr>
+        <td>GOUIZINE ABDELHADI </td>
+        <td>E IBN BATTOUTA</td>
+        <td>212660123049</td>
+    </tr>
+    <tr>
+        <td>BEL HAMRITI REDWANE </td>
+        <td>E ABDERRAHIM BOUABID</td>
+        <td>212669595567</td>
+    </tr>
+    <tr>
+        <td>SBERHOUM LAHOUCINE </td>
+        <td>E HASSANE IBN THABIT</td>
+        <td>212669595557</td>
+    </tr>
+    <tr>
+        <td>HAIDOUNE SAID </td>
+        <td>E AL MARINYINE</td>
+        <td>212660123216</td>
+    </tr>
+    <tr>
+        <td>AZDOD LAHOUCINE </td>
+        <td>E AL ATLAS  TILILA</td>
+        <td>212660123042</td>
+    </tr>
+    <tr>
+        <td>BAJDIR ABDERRAHIM </td>
+        <td>E YAAQOUB   AL MANSOUR</td>
+        <td>212669595573</td>
+    </tr>
+    <tr>
+        <td>ATERTA BRAHIM </td>
+        <td>SS AL IMAM AL BOUKHARI TIQQI</td>
+        <td>212669595525</td>
+    </tr>
+    <tr>
+        <td>QACHBAOUA L HOUCINE </td>
+        <td>E CHAER  AL HAMRA</td>
+        <td>212660123050</td>
+    </tr>
+    <tr>
+        <td>ABOUELABBAS JAMAL </td>
+        <td>SS ANNAHDA IRS</td>
+        <td>212669591636</td>
+    </tr>
+    <tr>
+        <td>AZIZI AHMED </td>
+        <td>E OMAR  IBN  AL KHATTAB</td>
+        <td>212660123158</td>
+    </tr>
+    <tr>
+        <td>BASSAM HASSAN </td>
+        <td>LC OUED  EL MAKHAZINE</td>
+        <td>212661913099</td>
+    </tr>
+    <tr>
+        <td>BAZHAR EL MOSTAFA </td>
+        <td>LC IDRISS  LAHRIZI</td>
+        <td>212661547667</td>
+    </tr>
+    <tr>
+        <td>KALATI RACHID </td>
+        <td>SS ANNAKHIL TIKIOUINE</td>
+        <td>212669595543</td>
+    </tr>
+    <tr>
+        <td>EL JID ABDELKBIR </td>
+        <td>SS ANSRI ISDRAM</td>
+        <td>212669595533</td>
+    </tr>
+    <tr>
+        <td>BIGUINANE BRAHIM </td>
+        <td>LC IBN TOFAIL</td>
+        <td>212661997200</td>
+    </tr>
+    <tr>
+        <td>EL KIHAL AHMED </td>
+        <td>E AL ATLAS AIT EL MOUDDEN</td>
+        <td>212660123148</td>
+    </tr>
+    <tr>
+        <td>ADHAM HAFID </td>
+        <td>E AL WAFAE</td>
+        <td>212660123145</td>
+    </tr>
+    <tr>
+        <td>BOUHOU MOHAMED </td>
+        <td>LC AL INBIAAT</td>
+        <td>212661652769</td>
+    </tr>
+    <tr>
+        <td>ECH CHHARRADY ABDELJALIL </td>
+        <td>E HAY MOHAMMADI</td>
+        <td>212660123150</td>
+    </tr>
+    <tr>
+        <td>AIT HSSAIN ABDELLAH </td>
+        <td>SS SOUK SEBT AOURGA</td>
+        <td>212669595539</td>
+    </tr>
+    <tr>
+        <td>AZEDDAGH ETTIJANI </td>
+        <td>E DAR BOUBKER DAR BOUBKER</td>
+        <td>212669595511</td>
+    </tr>
+    <tr>
+        <td>BENAABBOU HASSAN </td>
+        <td>E ATTAHER AL IFRANI</td>
+        <td>212679826125</td>
+    </tr>
+    <tr>
+        <td>ELKOUIRI ABDELLAH </td>
+        <td>SS ABDALLAH IBN YASSINE DOUTSOULILT</td>
+        <td>212669595558</td>
+    </tr>
+    <tr>
+        <td>ECHARI HASSAN </td>
+        <td>E AL MOKHTAR   SOUSSI</td>
+        <td>212669595580</td>
+    </tr>
+    <tr>
+        <td>EL OUEKDY ABDELLAH </td>
+        <td>SS SIDI BRAHIM OU ALI ASSIF YIG</td>
+        <td>212669595560</td>
+    </tr>
+    <tr>
+        <td>BARKOUKI MUSTAFA </td>
+        <td>E MOHAMED  KHOUIBI</td>
+        <td>212660123217</td>
+    </tr>
+    <tr>
+        <td>IGRI EL MOSTAFA </td>
+        <td>SS AL IMAM AL BOUSSAIRI TAGHAZOUT</td>
+        <td>212669595532</td>
+    </tr>
+    <tr>
+        <td>ID BAHA MOHAMED </td>
+        <td>LC AL AKKAD</td>
+        <td>212661473058</td>
+    </tr>
+    <tr>
+        <td>AITSALAH YAHYA </td>
+        <td>LC ABOU FIRASS   AL HAMADANI</td>
+        <td>212661650135</td>
+    </tr>
+    <tr>
+        <td>OITACHE MUSTAPHA </td>
+        <td>E BIR ANZARANE</td>
+        <td>212669595574</td>
+    </tr>
+    <tr>
+        <td>ZAAMA MOHAMED LIMAME </td>
+        <td>LQ AL MOUTANABI</td>
+        <td>212661540398</td>
+    </tr>
+    <tr>
+        <td>EL ATOUTE MOHAMED </td>
+        <td>SS AL HIDAB AMESKROUD</td>
+        <td>212669595547</td>
+    </tr>
+    <tr>
+        <td>MAKHCHANE M HAMED </td>
+        <td>E IBN SINA</td>
+        <td>212660123048</td>
+    </tr>
+    <tr>
+        <td>KIYALI MOHAMMED </td>
+        <td>AE EC TIGZIRINE -TIGZIRINE</td>
+        <td>212669595518</td>
+    </tr>
+    <tr>
+        <td>YAMANI MOHAMED </td>
+        <td>SS SIDI AHMED ERRAMI IMIMIKI</td>
+        <td>212669595520</td>
+    </tr>
+    <tr>
+        <td>EL KOURD AICHA </td>
+        <td>E AL MASSIRA</td>
+        <td>212660123146</td>
+    </tr>
+    <tr>
+        <td>ZENID LAHOUSSAINE </td>
+        <td>SS ALMA ALMA</td>
+        <td>212669595561</td>
+    </tr>
+    <tr>
+        <td>ZAHID MOHAMED </td>
+        <td>E. TAMAOUANZA</td>
+        <td>212679824631</td>
+    </tr>
+    <tr>
+        <td>CHAB MOHAMED </td>
+        <td>E AL FARAH</td>
+        <td>212644444904</td>
+    </tr>
+    <tr>
+        <td>SEMMAT BRAHIM </td>
+        <td>E SOUKAINA BENT ALHOUSSAIN</td>
+        <td>212660123052</td>
+    </tr>
+    <tr>
+        <td>KIYALI MOHAMMED </td>
+        <td>E.C. TIGZIRINE</td>
+        <td>212669595518</td>
+    </tr>
+    <tr>
+        <td>LECHGAR SAID </td>
+        <td>SS TAGADIRT NIDOUBELLA TAGADIRT NIDOUBELLA</td>
+        <td>212669595512</td>
+    </tr>
+    <tr>
+        <td>NAKHAL MOHAMED </td>
+        <td> E ALI AZIKOU   </td>
+        <td>212669595796</td>
+    </tr>
+    <tr>
+        <td>FILALY LAHOUCINE </td>
+        <td>LC ABDELLAH IBN ABBAS</td>
+        <td>212661474059</td>
+    </tr>
+    <tr>
+        <td>BOU ELAZ JAMILA </td>
+        <td>E DRISS BENZEKRI</td>
+        <td>212679827055</td>
+    </tr>
+    <tr>
+        <td>AJAMMOUR SAID </td>
+        <td>E FATIMA  AL FIHRYA</td>
+        <td>212660123159</td>
+    </tr>
+    <tr>
+        <td>OKHERTA MOHAMED </td>
+        <td>E ADRAR</td>
+        <td>212679825083</td>
+    </tr>
+    <tr>
+        <td>BOULAAID ZAIDE </td>
+        <td>LQ BADR</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>ZALZOULI MOHAMED RAMDANE </td>
+        <td>LQ ABOULABBAS  SEBTI</td>
+        <td>212661982517</td>
+    </tr>
+    <tr>
+        <td>HERMASS MOHAMED SAID </td>
+        <td>LQ 06 NOVEMBRE</td>
+        <td>212679827124</td>
+    </tr>
+    <tr>
+        <td>MOUTAOUAKIL ABDELKADER </td>
+        <td>LC AHMED CHAOUKI</td>
+        <td>212661474419</td>
+    </tr>
+    <tr>
+        <td>ELBARJI MOHAMAD </td>
+        <td>LC AL QODS</td>
+        <td>212661650310</td>
+    </tr>
+    <tr>
+        <td>BLGRIM EL HASSANE </td>
+        <td>LC MOHAMED CHEIKH SAADI</td>
+        <td>212661581047</td>
+    </tr>
+    <tr>
+        <td>BAYHANI ABDESSADIK </td>
+        <td>SS TAREK IBN ZIAD LODA</td>
+        <td>212669595542</td>
+    </tr>
+    <tr>
+        <td>AZIZI LAHCEN </td>
+        <td>LQ AJDIR</td>
+        <td>212661913123</td>
+    </tr>
+    <tr>
+        <td>BAYHANI ABDESSADIK </td>
+        <td>SS ASKENS ASKENS</td>
+        <td>212669595542</td>
+    </tr>
+    <tr>
+        <td>BRIOI OMAR </td>
+        <td>LC AL MAOUZ</td>
+        <td>212661651946</td>
+    </tr>
+    <tr>
+        <td>EL MAGHRAOUI RABIA </td>
+        <td>LC 11 JANAVIER</td>
+        <td>212661601131</td>
+    </tr>
+    <tr>
+        <td>AMEZIANE TIJANI </td>
+        <td>LC MOHAMMED VI</td>
+        <td>212661101524</td>
+    </tr>
+    <tr>
+        <td>KHURCHI AHMED </td>
+        <td>E AL IMAM  CHAFII</td>
+        <td>212669595513</td>
+    </tr>
+    <tr>
+        <td>EL QADI AHMED </td>
+        <td>LC IBN KHALDOUN</td>
+        <td>212661580247</td>
+    </tr>
+    <tr>
+        <td>FAGOUL ABDELLATIF </td>
+        <td>SS HAROUN ARRACHID AQESRI</td>
+        <td>212669595538</td>
+    </tr>
+    <tr>
+        <td>BOUREGAA BELKASSEM </td>
+        <td>E ACHATI</td>
+        <td>212669595554</td>
+    </tr>
+    <tr>
+        <td>BOUALI ABD </td>
+        <td>E ALLAL BEN ABDALLAH</td>
+        <td>212669595568</td>
+    </tr>
+    <tr>
+        <td>BASSAR HOUMAD </td>
+        <td>E ANNASR</td>
+        <td>212660123083</td>
+    </tr>
+    <tr>
+        <td>CHTOUNOU LAHOUCINE </td>
+        <td>LQ ARRACHAD</td>
+        <td>212660132614</td>
+    </tr>
+    <tr>
+        <td>EL MOQADEM AHMED </td>
+        <td>LQ LALLA MERIYEM</td>
+        <td>212661913126</td>
+    </tr>
+    <tr>
+        <td>EL BAKAYE EL KOTB </td>
+        <td>LQ AL AMAL</td>
+        <td>212660132617</td>
+    </tr>
+    <tr>
+        <td>BAZZI AHMED </td>
+        <td>E AL IZDIHAR</td>
+        <td>212660123215</td>
+    </tr>
+    <tr>
+        <td>BOUCHRIF LHCEN </td>
+        <td>LQ ABDELKARIM  AL KHATTABI</td>
+        <td>212661617880</td>
+    </tr>
+    <tr>
+        <td>SERHANI ABDELGHAFOUR </td>
+        <td>SS AIN AFRA AIN AFRA</td>
+        <td>212669595528</td>
+    </tr>
+    <tr>
+        <td>OUCHEN ABDELKRIM </td>
+        <td>E ABDELAZIZ AL MASSI</td>
+        <td>212679826180</td>
+    </tr>
+    <tr>
+        <td>BOUDDOUNIT BELAID </td>
+        <td>LQ IBN MAJA</td>
+        <td>212661913125</td>
+    </tr>
+    <tr>
+        <td>JAMHAMMED ABDERRAHMAN </td>
+        <td>E ATTAQADDOUM</td>
+        <td>212669595555</td>
+    </tr>
+    <tr>
+        <td>BELCADI HALOUI MOHAMED </td>
+        <td>E TADDART</td>
+        <td>212679826150</td>
+    </tr>
+    <tr>
+        <td>FIRIX ABDERRAHMAN </td>
+        <td>E ABOU BAKR  ASSIDDIQ</td>
+        <td>212669595578</td>
+    </tr>
+    <tr>
+        <td>EL ASAME AHMED </td>
+        <td>LC ALMAWAHIB</td>
+        <td>212660123651</td>
+    </tr>
+    <tr>
+        <td>DINAMOU DRISS </td>
+        <td>LQ AMRO BNOU LAAS</td>
+        <td>212660123252</td>
+    </tr>
+    <tr>
+        <td>EL FAKIR ABDELLAH </td>
+        <td>LC ZOUBIR BNOU AL AOUAM</td>
+        <td>212661554886</td>
+    </tr>
+    <tr>
+        <td>BENDOUZANE ABDERRAHMANE </td>
+        <td>SS TIMASNINE IDORANE</td>
+        <td>212669595544</td>
+    </tr>
+    <tr>
+        <td>BOUAACHRA OMAR </td>
+        <td>SS AGUERD AGUERD</td>
+        <td>212669595534</td>
+    </tr>
+    <tr>
+        <td>EL AABOUBI EL HABIB </td>
+        <td>LC ALI IBN ABI TALEB</td>
+        <td>212661651821</td>
+    </tr>
+    <tr>
+        <td>JARIRI AHMED </td>
+        <td>E ASSERKIT</td>
+        <td>212669595529</td>
+    </tr>
+    <tr>
+        <td>BAHMAD ZAID </td>
+        <td>E. ALMOUAHIDINE</td>
+        <td>212679826218</td>
+    </tr>
+    <tr>
+        <td>HNA MUSTAPHA </td>
+        <td>LQ AL KHALIJ</td>
+        <td>212660123658</td>
+    </tr>
+    <tr>
+        <td>MA EL AININE AHMED </td>
+        <td>LC IBN  AL HAYTHAM</td>
+        <td>212661472153</td>
+    </tr>
+    <tr>
+        <td>AIT HAMMOU HASSI ABDELLAH </td>
+        <td>SS SAQIA  AL HAMRA INRAREN</td>
+        <td>212669595536</td>
+    </tr>
+    <tr>
+        <td>BENHSSINE RACHIDA </td>
+        <td>E OUED SOUSS</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>MONTASIR BRAHIM </td>
+        <td>LQ ZERKTOUNI</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>LAMDINI ABDELLATIF </td>
+        <td>E ABDELMOUMEN BEN ALI</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>BARI ABDELLAH </td>
+        <td>SS AMINA BENT OUAHB TAMAIT OUFELLA</td>
+        <td>212669595550</td>
+    </tr>
+    <tr>
+        <td>SAHAL     LAHOUCINE </td>
+        <td>E AL MOUJAHIDINE</td>
+        <td>212660123142</td>
+    </tr>
+    <tr>
+        <td>NAIME ABDELAZIZ </td>
+        <td>SS MSIGUINA IGHIL OUDARDOR</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>MADDI LAHOUCINE </td>
+        <td>SS TOURAR TOURAR</td>
+        <td>212669595553</td>
+    </tr>
+    <tr>
+        <td>BIDOUANI MOHA </td>
+        <td>E 2 MARS</td>
+        <td>212669595575</td>
+    </tr>
+    <tr>
+        <td>EL FARSAOUI CHERKI </td>
+        <td>LQ MOHAMED DERFOUFI</td>
+        <td>212661445163</td>
+    </tr>
+    <tr>
+        <td>LOTFI EL MAHJOUB </td>
+        <td>E AL FIRDAOUS</td>
+        <td>212669595563</td>
+    </tr>
+    <tr>
+        <td>KOUZOUD MHAND </td>
+        <td>E AL FARABI</td>
+        <td>212669595576</td>
+    </tr>
+    <tr>
+        <td>AIT EL HAMAM EL HASSANE </td>
+        <td>E AL MASSAMIDA</td>
+        <td>212669595572</td>
+    </tr>
+    <tr>
+        <td>AGOURRAM LAHCEN </td>
+        <td>E AL WAHDA</td>
+        <td>212669594921</td>
+    </tr>
+    <tr>
+        <td>AAMMI MBAREK </td>
+        <td>LQ YOUSSEF BNOU TACHFIN</td>
+        <td>212661913243</td>
+    </tr>
+    <tr>
+        <td>AIT OUFKIR MOHAMED </td>
+        <td>E ABDELMAJID BEN JALLOUN</td>
+        <td>212660123086</td>
+    </tr>
+    <tr>
+        <td>AHCHOUCH ABDERRAZAQ </td>
+        <td>SS ID BENSAG ID BENSAG</td>
+        <td>212661475159</td>
+    </tr>
+    <tr>
+        <td>ZALIM HASSAN </td>
+        <td>LC AL BOUHTOURI</td>
+        <td>212661653099</td>
+    </tr>
+    <tr>
+        <td>ESSAOUABI MARIM </td>
+        <td>E MEDERSATCOM TADDART</td>
+        <td>212666142851</td>
+    </tr>
+    <tr>
+        <td>KARZAZI MOHAMED </td>
+        <td>LQ AOURIR</td>
+        <td>212660123652</td>
+    </tr>
+    <tr>
+        <td>LAMINE ABDELLAH </td>
+        <td>E AL HANSALI</td>
+        <td>212669595552</td>
+    </tr>
+    <tr>
+        <td>BAHMI ABDESSLAM </td>
+        <td>LQ BADR</td>
+        <td>212661985080</td>
+    </tr>
+    <tr>
+        <td>GUILMI MOHAMED </td>
+        <td>SS AL  HIDAYA TAMAIT IZDER</td>
+        <td>212669595515</td>
+    </tr>
+    <tr>
+        <td>ID YASSINE MOHAMED </td>
+        <td>LC RAMALLAH</td>
+        <td>212679826158</td>
+    </tr>
+    <tr>
+        <td>AFIF LAHOUSSINE </td>
+        <td>E AL YAMAMA</td>
+        <td>212669595073</td>
+    </tr>
+    <tr>
+        <td>AGHROUS EL HASSAN </td>
+        <td>E AIT TAMR TAMRI</td>
+        <td>212679826149</td>
+    </tr>
+    <tr>
+        <td>AGHROUS EL HASSAN </td>
+        <td>SS AGHROD AGHROD</td>
+        <td>212679826149</td>
+    </tr>
+    <tr>
+        <td>BENASSOU AZIZ </td>
+        <td>SS HALIMA SAADIA AGUERSOUAK</td>
+        <td>212669595549</td>
+    </tr>
+    <tr>
+        <td>ELMANSOURI ABDERRAHMAN </td>
+        <td>SS SIDI ABOUDAOUD TOURARINE</td>
+        <td>212669595522</td>
+    </tr>
+    <tr>
+        <td>GUELAA HASSANNA </td>
+        <td>LC 20 AOUT</td>
+        <td>212661554826</td>
+    </tr>
+    <tr>
+        <td>FADLAM RACHID </td>
+        <td>E ANNAJAH</td>
+        <td>212669595577</td>
+    </tr>
+    <tr>
+        <td>SOUSSI EL MADANI </td>
+        <td>LC LAGOUIRA</td>
+        <td>212661471598</td>
+    </tr>
+    <tr>
+        <td>AZYZ MOHAMED </td>
+        <td>SS TIDILI TIDILI</td>
+        <td>212669595540</td>
+    </tr>
+    <tr>
+        <td>GALLA EL HASSAN </td>
+        <td>E AL GHAZALI</td>
+        <td>212669595571</td>
+    </tr>
+    <tr>
+        <td>ESSAFI MOUSSA </td>
+        <td>L AL IDRISSI TECHNIQUE</td>
+        <td>212661913132</td>
+    </tr>
+    <tr>
+        <td>TOUIL SAID </td>
+        <td>LC SOUSS  AL ALIMA</td>
+        <td>212661472041</td>
+    </tr>
+    <tr>
+        <td>BELHAMI MOHAMED </td>
+        <td>LQ IBN HAZM</td>
+        <td>212660123144</td>
+    </tr>
+    <tr>
+        <td>KENTAOUI M BAREK </td>
+        <td>LQ SIDI EL HAJ SAID</td>
+        <td>212661601281</td>
+    </tr>
+    <tr>
+        <td>BOUGAILLOU LAHOUCINE </td>
+        <td>SS AL ARGANE JITAKOUL</td>
+        <td>212669595521</td>
+    </tr>
+    <tr>
+        <td>CHOUAF MOHAMED </td>
+        <td>SS CHAHID AL HOUSSAIN BEN ALI SIDI BELKACEM</td>
+        <td>212669595524</td>
+    </tr>
+    <tr>
+        <td>BADDOU MOHAMED </td>
+        <td>LC TAGADIRT NAABADOU</td>
+        <td>212679826138</td>
+    </tr>
+    <tr>
+        <td>KARIM HASSAN </td>
+        <td>E AL MAGHRIB  AL ARABI</td>
+        <td>212660123091</td>
+    </tr>
+    <tr>
+        <td>LAAMIRI KABIR </td>
+        <td>SS SED ABD EL MOUMEN TASGUINT</td>
+        <td>212669595546</td>
+    </tr>
+    <tr>
+        <td>KHIYAT AHMED </td>
+        <td>E ATTAKADDOUM II</td>
+        <td>212660123147</td>
+    </tr>
+    <tr>
+        <td> AKESKOUS HAMID </td>
+        <td>LC AZZAITOUNE</td>
+        <td>212661553745</td>
+    </tr>
+    <tr>
+        <td>EL MASSAOUDI MOHAMED </td>
+        <td>E AZZALLAQA</td>
+        <td>212669595579</td>
+    </tr>
+    <tr>
+        <td>KHALI DRISS </td>
+        <td>SS SIDI BOUSHAB SIDI BOUSHAB</td>
+        <td>212669595545</td>
+    </tr>
+    <tr>
+        <td>MAAROUFI NOURDINE </td>
+        <td>LQ AL MAJD</td>
+        <td>212661913121</td>
+    </tr>
+    <tr>
+        <td>EJJAMOUD LAHOUCINE </td>
+        <td>LC AL FIDIA</td>
+        <td>212661652126</td>
+    </tr>
+    <tr>
+        <td>INDMESKINE MOHAMED </td>
+        <td>Lycée Réda Slaoui</td>
+        <td>212660191439</td>
+    </tr>
+    <tr>
+        <td>KHOUMAI AHMED </td>
+        <td>LC RIYAD</td>
+        <td>212661650362</td>
+    </tr>
+    <tr>
+        <td>KACHT MOHAMED </td>
+        <td>SS ASSAADYINE AMALOU</td>
+        <td>212669595514</td>
+    </tr>
+    <tr>
+        <td>IDRISSI ZAKI MOULAY EL HASSAN </td>
+        <td>LC MEHDI BNOU TOUMERT</td>
+        <td>212661653374</td>
+    </tr>
+    <tr>
+        <td>ID AHMED ALI ISMAIL </td>
+        <td>LC NABLOS</td>
+        <td>212660132613</td>
+    </tr>
+    <tr>
+        <td>MASSA LAHOUCINE </td>
+        <td>E TADOUARTE</td>
+        <td>212679826176</td>
+    </tr>
+    <tr>
+        <td>BOROMI AZZOUZ </td>
+        <td>LQ ERRAZI</td>
+        <td>212679826141</td>
+    </tr>
+    <tr>
+        <td>BOUGHEZROUN MOHAMED </td>
+        <td>LQ MOHAMMED ABD ELJABRI</td>
+        <td>212661913129</td>
+    </tr>
+    <tr>
+        <td>AOUBOUKDIR HASSAN </td>
+        <td>LC OUKBA BNOU NAFIAA</td>
+        <td>212661580096</td>
+    </tr>
+    <tr>
+        <td> MIMOUN NASSIRI </td>
+        <td>LC AL KHALIL</td>
+        <td>212661913103</td>
+    </tr>
+    <tr>
+        <td>ASRAR LAHSEN </td>
+        <td>E.ALYASSAMINE</td>
+        <td>212660123076</td>
+    </tr>
+    <tr>
+        <td>BOUMHAOUT EL HABIB </td>
+        <td>E AL FATH</td>
+        <td>212660123084</td>
+    </tr>
+    <tr>
+        <td>NAIT EL KHARRAZ LAHCEN </td>
+        <td>SS SIDI SAID OUHMAD IKOUZA</td>
+        <td>212669595530</td>
+    </tr>
+    <tr>
+        <td>DAADAA LAHCEN </td>
+        <td>SS CHALLALATE ISK</td>
+        <td>212669595566</td>
+    </tr>
+    <tr>
+        <td>ROTE LAHCEN </td>
+        <td>SS SIDI SAID ATANANE AZIAR</td>
+        <td>212669595535</td>
+    </tr>
+    <tr>
+        <td>EL KHARRAT ABDALLAH </td>
+        <td>SS AL ABBASSYINE AZRARAG</td>
+        <td>212669595510</td>
+    </tr>
+    <tr>
+        <td>EL KEBCH AHMED </td>
+        <td>E AL ADARISSA</td>
+        <td>212660123149</td>
+    </tr>
+    <tr>
+        <td>IGMIDEN LAHSEN </td>
+        <td>E IBN HANBAL</td>
+        <td>212660123087</td>
+    </tr>
+    <tr>
+        <td>CHABBOUBA ABDERRAHMAN </td>
+        <td>E AL MOBADARA</td>
+        <td>212660123249</td>
+    </tr>
+    <tr>
+        <td>ABOULHAB HAFIDA </td>
+        <td>E OMAR IBN ABDELAZIZ</td>
+        <td>212669595570</td>
+    </tr>
+    <tr>
+        <td>EL AINI ABDELLATIF </td>
+        <td>LQ ANOUAL</td>
+        <td>212661913122</td>
+    </tr>
+    <tr>
+        <td>HAMIDI FOUAD </td>
+        <td>LC JAMAL EDDINE  AL AFGHANI</td>
+        <td>212661652796</td>
+    </tr>
+    <tr>
+        <td>JILLALI CHERRAH </td>
+        <td>SS AL MANAR TAMRI</td>
+        <td>212669595519</td>
+    </tr>
+    <tr>
+        <td>BENASSOU AZIZ </td>
+        <td>SS TADRART TADRART</td>
+        <td>212669595549</td>
+    </tr>
+</table>
+</div>
+
+
+    
+ 
+
+
+
+
+
+    
+
+
+
+
+
+</body>   
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="/static/js/app.js"></script>
+</html>

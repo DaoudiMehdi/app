@@ -1,0 +1,13 @@
+.paratext{
+    color: #fff;
+    margin-top: 15%;
+    direction: rtl;
+}
+
+@media (max-width: 660px){
+    .container1 .contactForm h2, .container1 .contactInfo h2 {
+        margin-left: 60%;
+    }
+
+}
+ 
